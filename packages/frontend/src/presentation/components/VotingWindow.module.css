@@ -1,0 +1,145 @@
+.window {
+  background: #1e293b;
+  border-radius: 12px;
+  border: 1px solid #4338ca;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.label {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.valueDisplay {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #a5b4fc;
+  min-width: 80px;
+  text-align: center;
+}
+
+.buttonsGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.plusButtons, .minusButtons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.15s;
+  min-width: 50px;
+}
+
+.plusBtn {
+  background: #1e3a5f;
+  color: #60a5fa;
+  border: 1px solid #1d4ed8;
+}
+
+.plusBtn:hover {
+  background: #1d4ed8;
+  color: white;
+}
+
+.minusBtn {
+  background: #2d1b1b;
+  color: #f87171;
+  border: 1px solid #7f1d1d;
+}
+
+.minusBtn:hover:not(:disabled) {
+  background: #7f1d1d;
+  color: white;
+}
+
+.minusBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.submitBtn {
+  padding: 12px 40px;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: #4f46e5;
+}
+
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submitted {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: #0d2d1e;
+  border: 1px solid #166534;
+  border-radius: 12px;
+  padding: 28px;
+  color: #4ade80;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.checkIcon {
+  font-size: 2rem;
+}
+
+.submitted p {
+  margin: 0;
+  color: #86efac;
+}
+
+.value {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.retractBtn {
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid #166534;
+  color: #86efac;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.retractBtn:hover {
+  background: #14532d;
+  border-color: #4ade80;
+  color: #4ade80;
+}

@@ -1,0 +1,132 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+  flex-shrink: 0;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.backBtn {
+  background: transparent;
+  border: 1px solid #334155;
+  color: #64748b;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.backBtn:hover {
+  border-color: #94a3b8;
+  color: #94a3b8;
+}
+
+.tableName {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.adminBadge {
+  padding: 2px 8px;
+  background: #4338ca;
+  color: #c7d2fe;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+}
+
+.playerName {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.bottomPanel {
+  padding: 20px 24px;
+  border-top: 1px solid #334155;
+  background: #0f172a;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.loading, .error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: #0f172a;
+  color: #94a3b8;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hint {
+  font-size: 0.875rem;
+  color: #475569;
+  margin: 0;
+}
+
+.restartSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.restartList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.restartBtn {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid #475569;
+  color: #94a3b8;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.restartBtn:hover {
+  border-color: #6366f1;
+  color: #a5b4fc;
+}

@@ -1,0 +1,141 @@
+.panel {
+  width: 240px;
+  background: #1e293b;
+  border-left: 1px solid #334155;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.heading {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 16px;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: #0f172a;
+  border-radius: 8px;
+  border: 1px solid #334155;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.online { background: #34d399; }
+.offline { background: #475569; }
+
+.name {
+  font-size: 0.875rem;
+  color: #f1f5f9;
+  font-weight: 500;
+  flex: 1;
+}
+
+.you { color: #94a3b8; font-weight: 400; }
+
+.adminBadge {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 5px;
+  background: #4338ca;
+  color: #c7d2fe;
+  border-radius: 4px;
+  font-size: 0.7rem;
+}
+
+.votingBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.voted {
+  background: #064e3b;
+  color: #34d399;
+}
+
+.pending {
+  background: #1c1917;
+  color: #78716c;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  accent-color: #6366f1;
+}
+
+.weightControl {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.weightBtn {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid #475569;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  transition: all 0.15s;
+}
+
+.weightBtn:hover:not(:disabled) {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.weightBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.weight {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  min-width: 28px;
+  text-align: center;
+}

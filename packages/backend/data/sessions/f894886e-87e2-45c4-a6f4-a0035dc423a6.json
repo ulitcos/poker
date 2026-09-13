@@ -1,0 +1,35 @@
+{
+  "sessionId": "f894886e-87e2-45c4-a6f4-a0035dc423a6",
+  "tableName": "2",
+  "tableId": "ce007fcf-d607-4908-acd8-a0660352253a",
+  "startedAt": 1789321705609,
+  "finishedAt": null,
+  "scores": [
+    {
+      "taskId": "3c69c193-3e1a-49d0-a59c-63ac59f63f71",
+      "tableId": "ce007fcf-d607-4908-acd8-a0660352253a",
+      "taskUrl": "https://youtrack.etg.team/issue/MIFD-1913/Dekonsolidaciya-ostatki",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "19ceb784-dd17-4fcd-af94-f617ea3dc7ec",
+          "playerName": "rus",
+          "value": 4,
+          "weight": 1,
+          "isDropped": false
+        },
+        {
+          "playerId": "c111a485-1162-4372-80b3-83671e5fd395",
+          "playerName": "sofa",
+          "value": 40,
+          "weight": 1,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 22,
+      "finalScore": 22,
+      "isManualScore": false,
+      "timestamp": 1789321705609
+    }
+  ]
+}

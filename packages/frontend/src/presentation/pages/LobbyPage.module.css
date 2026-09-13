@@ -1,0 +1,143 @@
+.container {
+  min-height: 100vh;
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #6366f1;
+  margin: 0;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.userName {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.logoutBtn {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid #475569;
+  color: #94a3b8;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.logoutBtn:hover {
+  border-color: #f87171;
+  color: #f87171;
+}
+
+.main {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.createBtn {
+  padding: 10px 20px;
+  background: #6366f1;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.createBtn:hover {
+  background: #4f46e5;
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 0;
+  color: #475569;
+}
+
+.tableList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tableCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background: #1e293b;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  transition: border-color 0.2s;
+}
+
+.tableCard:hover {
+  border-color: #6366f1;
+}
+
+.tableInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tableName {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.tableMeta {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.joinBtn {
+  padding: 8px 20px;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.joinBtn:hover {
+  background: #4f46e5;
+}
