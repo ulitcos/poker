@@ -13,8 +13,7 @@ export class AverageScoring implements IScoringStrategy {
     }
 
     const weightedSum = activeVotes.reduce((sum, v) => sum + v.value * v.weight, 0);
-    const totalWeight = activeVotes.reduce((sum, v) => sum + v.weight, 0);
-    const average = totalWeight === 0 ? 0 : weightedSum / totalWeight;
+    const average = weightedSum / activeVotes.length;
 
     return {
       result: Math.round(average * 10) / 10,

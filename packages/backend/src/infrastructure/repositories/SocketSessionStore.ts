@@ -1,5 +1,4 @@
-import type { PlayerId } from '@planning-poker/shared';
-import type { TableId } from '@planning-poker/shared';
+import type { PlayerId, TableId } from '@planning-poker/shared';
 
 export interface SocketSession {
   socketId: string;
@@ -10,6 +9,7 @@ export interface SocketSession {
 export class SocketSessionStore {
   private readonly bySocket = new Map<string, SocketSession>();
   private readonly byPlayer = new Map<PlayerId, string>();
+  private readonly evictionTimers = new Map<PlayerId, ReturnType<typeof setTimeout>>();
 
   set(socketId: string, session: SocketSession): void {
     this.bySocket.set(socketId, session);
@@ -23,19 +23,6 @@ export class SocketSessionStore {
   getByPlayer(playerId: PlayerId): SocketSession | undefined {
     const socketId = this.byPlayer.get(playerId);
     return socketId ? this.bySocket.get(socketId) : undefined;
-  }
-
-  updateSocketId(playerId: PlayerId, newSocketId: string): void {
-    const oldSocketId = this.byPlayer.get(playerId);
-    if (oldSocketId) {
-      const session = this.bySocket.get(oldSocketId);
-      if (session) {
-        this.bySocket.delete(oldSocketId);
-        const updated = { ...session, socketId: newSocketId };
-        this.bySocket.set(newSocketId, updated);
-        this.byPlayer.set(playerId, newSocketId);
-      }
-    }
   }
 
   setTableId(socketId: string, tableId: TableId | null): void {
@@ -55,5 +42,28 @@ export class SocketSessionStore {
 
   getSocketIdForPlayer(playerId: PlayerId): string | undefined {
     return this.byPlayer.get(playerId);
+  }
+
+  scheduleEviction(playerId: PlayerId, delayMs: number, onEvict: () => void): void {
+    this.cancelEviction(playerId);
+    const timer = setTimeout(() => {
+      this.evictionTimers.delete(playerId);
+      const socketId = this.byPlayer.get(playerId);
+      if (socketId) this.delete(socketId);
+      onEvict();
+    }, delayMs);
+    this.evictionTimers.set(playerId, timer);
+  }
+
+  cancelEviction(playerId: PlayerId): void {
+    const timer = this.evictionTimers.get(playerId);
+    if (timer !== undefined) {
+      clearTimeout(timer);
+      this.evictionTimers.delete(playerId);
+    }
+  }
+
+  hasPendingEviction(playerId: PlayerId): boolean {
+    return this.evictionTimers.has(playerId);
   }
 }

@@ -33,8 +33,16 @@ export class SocketHandler {
   private handleConnection(socket: TypedSocket): void {
     socket.on('session:join', (payload, callback) => {
       try {
-        const existing = this.sessionStore.getBySocket(socket.id);
-        const player = this.playerService.getOrCreate(payload.playerName, existing?.playerId);
+        const existingBySocket = this.sessionStore.getBySocket(socket.id);
+        const playerId = payload.playerId ?? existingBySocket?.playerId;
+        const player = this.playerService.getOrCreate(payload.playerName, playerId);
+
+        // Cancel eviction timer and clean up stale socket entry on reconnect
+        this.sessionStore.cancelEviction(player.id);
+        const oldSocketId = this.sessionStore.getSocketIdForPlayer(player.id);
+        if (oldSocketId && oldSocketId !== socket.id) {
+          this.sessionStore.delete(oldSocketId);
+        }
 
         this.sessionStore.set(socket.id, {
           socketId: socket.id,
@@ -64,10 +72,10 @@ export class SocketHandler {
       }
     });
 
-    socket.on('table:join', (payload, callback) => {
+    socket.on('table:join', async (payload, callback) => {
       try {
         const session = this.requireSession(socket.id);
-        const table = this.tableService.joinTable(payload.tableId, session.playerId);
+        const table = await this.tableService.joinTable(payload.tableId, session.playerId);
 
         socket.join(table.id);
         this.sessionStore.setTableId(socket.id, payload.tableId);
@@ -123,9 +131,15 @@ export class SocketHandler {
 
     socket.on('task:switch', (payload) => {
       try {
-        this.requireAdmin(socket.id, payload.tableId);
+        const table = this.tableService.requireTable(payload.tableId);
+        if (table.status !== 'completed') {
+          this.requireAdmin(socket.id, payload.tableId);
+        } else {
+          this.requireSession(socket.id);
+        }
         this.votingService.switchActiveTask(payload.tableId, payload.taskId);
         this.io.to(payload.tableId).emit('task:switched', payload.taskId);
+        this.broadcastTableState(payload.tableId);
       } catch (err) {
         socket.emit('error', String(err));
       }
@@ -293,6 +307,17 @@ export class SocketHandler {
       }
     });
 
+    socket.on('session:finish', async (payload) => {
+      try {
+        this.requireAdmin(socket.id, payload.tableId);
+        await this.votingService.finishSession(payload.tableId);
+        this.io.to(payload.tableId).emit('session:finished');
+        this.broadcastTableList();
+      } catch (err) {
+        socket.emit('error', String(err));
+      }
+    });
+
     socket.on('disconnect', () => {
       const session = this.sessionStore.getBySocket(socket.id);
       if (!session) return;
@@ -306,7 +331,16 @@ export class SocketHandler {
         });
       }
 
-      this.sessionStore.delete(socket.id);
+      const { playerId, tableId } = session;
+      this.sessionStore.scheduleEviction(playerId, 3_000, () => {
+        this.playerService.setOffline(playerId);
+        if (tableId) {
+          this.tableService.leaveTable(tableId, playerId);
+          this.io.to(tableId).emit('table:player-left', playerId);
+          this.broadcastTableState(tableId);
+        }
+        this.broadcastTableList();
+      });
     });
   }
 
@@ -327,9 +361,13 @@ export class SocketHandler {
     }
   }
 
-  private broadcastTableList(): void {
-    const list = this.tableService.getTableList();
-    this.io.emit('table:list-updated', list);
+  private async broadcastTableList(): Promise<void> {
+    try {
+      const list = await this.tableService.getTableList();
+      this.io.emit('table:list-updated', list);
+    } catch (err) {
+      console.error('broadcastTableList error:', err);
+    }
   }
 
   private requireSession(socketId: string) {

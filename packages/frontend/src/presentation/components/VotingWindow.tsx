@@ -5,11 +5,12 @@ import styles from './VotingWindow.module.css';
 
 interface Props {
   tableId: TableId;
+  isLastToVote?: boolean;
 }
 
 const STEPS = [1, 2, 4, 8, 40];
 
-export function VotingWindow({ tableId }: Props) {
+export function VotingWindow({ tableId, isLastToVote = false }: Props) {
   const { myVoteValue, myVoteSubmitted, updateVoteValue, submitVote, retractVote } = useTable();
 
   if (myVoteSubmitted) {
@@ -31,7 +32,10 @@ export function VotingWindow({ tableId }: Props) {
   };
 
   return (
-    <div className={styles.window}>
+    <div className={`${styles.window} ${isLastToVote ? styles.urgent : ''}`}>
+      {isLastToVote && (
+        <p className={styles.urgentNotice}>Вы единственный, кто ещё не дал оценку!</p>
+      )}
       <p className={styles.label}>Ваша оценка</p>
       <div className={styles.valueDisplay}>{myVoteValue}</div>
 

@@ -6,6 +6,7 @@ import type {
   IPlayerRepository,
   ITaskRepository,
   IVoteRepository,
+  ISessionResultRepository,
   Player,
   PlayerId,
   Task,
@@ -25,6 +26,7 @@ export class TableService {
     private readonly taskRepo: ITaskRepository,
     private readonly voteRepo: IVoteRepository,
     private readonly sessionService: SessionService,
+    private readonly sessionResultRepo: ISessionResultRepository,
   ) {}
 
   createTable(adminId: PlayerId, name: string): Table {
@@ -41,12 +43,57 @@ export class TableService {
     return table;
   }
 
-  joinTable(tableId: TableId, playerId: PlayerId): Table {
-    const table = this.requireTable(tableId);
+  async joinTable(tableId: TableId, playerId: PlayerId): Promise<Table> {
+    let table = this.tableRepo.findById(tableId);
+
+    if (!table) {
+      table = await this.restoreFromSession(tableId);
+    }
+
     if (!table.playerIds.includes(playerId)) {
       table.playerIds.push(playerId);
       this.tableRepo.save(table);
     }
+    return table;
+  }
+
+  private async restoreFromSession(tableId: TableId): Promise<Table> {
+    const sessions = await this.sessionResultRepo.findAll();
+    const session = sessions.find((s) => s.tableId === tableId && s.finishedAt == null);
+    if (!session) throw new Error(`Table ${tableId} not found`);
+
+    const lastScore = session.scores[session.scores.length - 1];
+    const algorithm: ScoringAlgorithm = lastScore?.algorithm ?? 'average';
+
+    const uniqueTaskIds = Array.from(new Set(session.scores.map((s) => s.taskId)));
+    const tasks: Task[] = uniqueTaskIds.map((taskId, index) => {
+      const scoreEntry = session.scores.filter((s) => s.taskId === taskId).pop()!;
+      const task: Task = {
+        id: taskId,
+        url: scoreEntry.taskUrl,
+        status: 'finalized',
+        finalScore: scoreEntry.finalScore,
+        isManualScore: scoreEntry.isManualScore,
+        order: index,
+      };
+      this.taskRepo.save(task);
+      this.sessionService.registerTask(tableId, taskId);
+      return task;
+    });
+
+    const sessionId = session.sessionId;
+    this.sessionService.restoreSession(tableId, sessionId);
+
+    const table: Table = {
+      id: tableId,
+      name: session.tableName,
+      adminId: '',
+      status: tasks.length > 0 ? 'completed' : 'waiting',
+      activeTaskId: tasks[tasks.length - 1]?.id ?? null,
+      scoringAlgorithm: algorithm,
+      playerIds: [],
+    };
+    this.tableRepo.save(table);
     return table;
   }
 
@@ -104,13 +151,39 @@ export class TableService {
     };
   }
 
-  getTableList(): TableListItem[] {
-    return this.tableRepo.findAll().map((t) => ({
-      id: t.id,
-      name: t.name,
-      playerCount: t.playerIds.length,
-      status: t.status,
-    }));
+  async getTableList(): Promise<TableListItem[]> {
+    const sessions = await this.sessionResultRepo.findAll();
+
+    const finishedIds = new Set(
+      sessions.filter((s) => s.finishedAt != null).map((s) => s.tableId)
+    );
+
+    // Tables from session files that haven't been finished
+    const fromFiles: TableListItem[] = sessions
+      .filter((s) => s.finishedAt == null)
+      .map((s) => {
+        const mem = this.tableRepo.findById(s.tableId);
+        return {
+          id: s.tableId,
+          name: s.tableName,
+          playerCount: mem?.playerIds.length ?? 0,
+          status: mem?.status ?? 'active',
+        };
+      });
+
+    const fromFilesIds = new Set(fromFiles.map((t) => t.id));
+
+    // In-memory tables not yet written to any file (no votes finalized)
+    const onlyInMemory: TableListItem[] = this.tableRepo.findAll()
+      .filter((t) => !finishedIds.has(t.id) && !fromFilesIds.has(t.id))
+      .map((t) => ({
+        id: t.id,
+        name: t.name,
+        playerCount: t.playerIds.length,
+        status: t.status,
+      }));
+
+    return [...fromFiles, ...onlyInMemory];
   }
 
   setAlgorithm(tableId: TableId, algorithm: ScoringAlgorithm): void {

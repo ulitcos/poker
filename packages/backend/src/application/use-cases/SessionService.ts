@@ -18,6 +18,11 @@ export class SessionService {
     return sessionId;
   }
 
+  restoreSession(tableId: TableId, sessionId: string): void {
+    this.tableToSession.set(tableId, sessionId);
+    this.sessionToTable.set(sessionId, tableId);
+  }
+
   registerTask(tableId: TableId, taskId: TaskId): void {
     const tasks = this.tableToTasks.get(tableId) ?? new Set();
     tasks.add(taskId);

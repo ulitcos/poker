@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { Task, TableId, VoteView, Player } from '@planning-poker/shared';
 import { useTable } from '../../application/contexts/TableContext';
 import { VotingWindow } from './VotingWindow';
+import { formatHours } from '../utils/formatHours';
 import styles from './CenterPanel.module.css';
 
 interface Props {
@@ -25,6 +26,7 @@ export function CenterPanel({ tableId, activeTask, tasks, allTasksFinalized, isA
     switchTask,
     revealedVotes,
     calculatedScore,
+    myVoteSubmitted,
   } = useTable();
 
   const [manualScoreInput, setManualScoreInput] = useState('');
@@ -56,25 +58,29 @@ export function CenterPanel({ tableId, activeTask, tasks, allTasksFinalized, isA
     setManualScoreInput('');
   };
 
-  if (allTasksFinalized) {
-    return (
-      <div className={styles.center}>
-        <div className={styles.statusBadge} data-status="completed">Все задачи оценены</div>
-        <p className={styles.hint}>Выберите задачу в боковой панели для перезапуска оценки</p>
-      </div>
-    );
-  }
-
   if (!activeTask) {
     return (
       <div className={styles.center}>
-        <p className={styles.hint}>Добавьте задачи в список</p>
+        {allTasksFinalized
+          ? <div className={styles.statusBadge} data-status="completed">Все задачи оценены</div>
+          : <p className={styles.hint}>Добавьте задачи в список</p>
+        }
       </div>
     );
   }
 
+  const finalized = tasks.filter((t) => t.status === 'finalized');
+  const totalHours = finalized.reduce((sum, t) => sum + (t.finalScore ?? 0), 0);
+
   return (
     <div className={styles.center}>
+      {allTasksFinalized && (
+        <div className={styles.statusBadge} data-status="completed">Все задачи оценены</div>
+      )}
+      <div className={styles.progressLine}>
+        Оценено <strong>{finalized.length}</strong> из <strong>{tasks.length}</strong> задач на <strong>{formatHours(totalHours)}</strong>
+      </div>
+
       <div className={styles.taskCard}>
         <span className={styles.taskLabel}>Текущая задача</span>
         <a
@@ -87,7 +93,7 @@ export function CenterPanel({ tableId, activeTask, tasks, allTasksFinalized, isA
         </a>
       </div>
 
-      <div className={`${styles.statusBadge}`} data-status={activeTask.status}>
+      <div className={styles.statusBadge} data-status={activeTask.status}>
         {statusLabel(activeTask.status)}
       </div>
 
@@ -104,7 +110,15 @@ export function CenterPanel({ tableId, activeTask, tasks, allTasksFinalized, isA
 
       {isVoting && (
         <>
-          {canVote && <VotingWindow tableId={tableId} />}
+          {canVote && (
+            <VotingWindow
+              tableId={tableId}
+              isLastToVote={
+                !myVoteSubmitted &&
+                votingPlayers.filter((p) => p.id !== currentPlayer?.id).every((p) => p.votingStatus === 'voted')
+              }
+            />
+          )}
           {!canVote && <p className={styles.hint}>Вы наблюдатель в этом голосовании</p>}
           {isAdmin && allVoted && (
             <button className={styles.primaryBtn} onClick={() => revealVotes(tableId)}>
@@ -126,12 +140,15 @@ export function CenterPanel({ tableId, activeTask, tasks, allTasksFinalized, isA
             {activeTask.isManualScore ? (
               <>
                 <span className={styles.scoreLabel}>Оценка администратора</span>
-                <span className={styles.scoreValue}>{activeTask.finalScore}</span>
+                <span className={styles.scoreValue}>{formatHours(activeTask.finalScore ?? 0)}</span>
               </>
             ) : (
               <>
-                <span className={styles.scoreLabel}>Результат ({algorithmName(calculatedScore)})</span>
-                <span className={styles.scoreValue}>{calculatedScore}</span>
+                <span className={styles.scoreLabel}>Результат</span>
+                <span className={styles.scoreValue}>
+                  {calculatedScore !== null ? formatHours(calculatedScore) : '–'}
+                </span>
+                {calculatedScore !== null && <FormulaBreakdown votes={revealedVotes} />}
               </>
             )}
           </div>
@@ -143,7 +160,6 @@ export function CenterPanel({ tableId, activeTask, tasks, allTasksFinalized, isA
                   Установить оценку вручную
                 </button>
               )}
-
               {showManualInput && (
                 <div className={styles.manualInput}>
                   <input
@@ -161,13 +177,11 @@ export function CenterPanel({ tableId, activeTask, tasks, allTasksFinalized, isA
                   </button>
                 </div>
               )}
-
               {activeTask.isManualScore && (
                 <button className={styles.secondaryBtn} onClick={() => revertToCalculated(tableId)}>
                   Вернуть результат от общей оценки
                 </button>
               )}
-
               {nextTask ? (
                 <button
                   className={styles.primaryBtn}
@@ -205,12 +219,15 @@ export function CenterPanel({ tableId, activeTask, tasks, allTasksFinalized, isA
             {activeTask.isManualScore ? (
               <>
                 <span className={styles.scoreLabel}>Оценка администратора</span>
-                <span className={styles.scoreValue}>{activeTask.finalScore}</span>
+                <span className={styles.scoreValue}>{formatHours(activeTask.finalScore ?? 0)}</span>
               </>
             ) : (
               <>
                 <span className={styles.scoreLabel}>Итог по формуле</span>
-                <span className={styles.scoreValue}>{activeTask.finalScore}</span>
+                <span className={styles.scoreValue}>{formatHours(activeTask.finalScore ?? 0)}</span>
+                {revealedVotes && revealedVotes.length > 0 && (
+                  <FormulaBreakdown votes={revealedVotes} />
+                )}
               </>
             )}
           </div>
@@ -239,6 +256,21 @@ export function CenterPanel({ tableId, activeTask, tasks, allTasksFinalized, isA
   );
 }
 
+function FormulaBreakdown({ votes }: { votes: VoteView[] }) {
+  const active = votes.filter((v) => !v.isDropped);
+  const terms = active.map((v) => `${v.value} × ${v.weight.toFixed(1)}`).join(' + ');
+  const weightedSum = active.reduce((sum, v) => sum + v.value * v.weight, 0);
+  const result = Math.round((weightedSum / active.length) * 10) / 10;
+
+  return (
+    <div className={styles.formula}>
+      <span className={styles.formulaStep}>({terms}) / {active.length}</span>
+      <span className={styles.formulaArrow}>= {Math.round(weightedSum * 10) / 10} / {active.length}</span>
+      <span className={styles.formulaArrow}>= {result} → {formatHours(result)}</span>
+    </div>
+  );
+}
+
 function VoteCard({ vote }: { vote: VoteView }) {
   return (
     <div className={`${styles.voteCard} ${vote.isDropped ? styles.dropped : ''}`}>
@@ -257,8 +289,4 @@ function statusLabel(status: Task['status']): string {
     case 'revealed': return 'Оценка завершена';
     case 'finalized': return 'Зафиксировано';
   }
-}
-
-function algorithmName(score: number | null): string {
-  return score !== null ? String(score) : '–';
 }

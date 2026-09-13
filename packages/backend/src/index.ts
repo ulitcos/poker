@@ -42,7 +42,7 @@ const sessionResultRepo = new FileSessionResultRepository(DATA_DIR);
 // ─── Application ──────────────────────────────────────────────────────────────
 const playerService = new PlayerService(playerRepo);
 const sessionService = new SessionService(playerRepo);
-const tableService = new TableService(tableRepo, playerRepo, taskRepo, voteRepo, sessionService);
+const tableService = new TableService(tableRepo, playerRepo, taskRepo, voteRepo, sessionService, sessionResultRepo);
 const taskService = new TaskService(taskRepo, voteRepo, playerRepo, sessionService);
 const votingService = new VotingService(
   tableRepo,

@@ -1,0 +1,47 @@
+{
+  "sessionId": "542a5437-373d-414e-a8e0-eb49ee50e318",
+  "tableName": "123",
+  "tableId": "386d1866-093d-45dd-94da-9b1f9c86d51c",
+  "startedAt": 1789330549573,
+  "finishedAt": 1789330571939,
+  "scores": [
+    {
+      "taskId": "e202d633-5d66-4e38-a8ad-f1cb2ca72fba",
+      "tableId": "386d1866-093d-45dd-94da-9b1f9c86d51c",
+      "taskUrl": "https://youtrack.etg.team/issues/MIFD",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "0c696a97-a4b1-4bd3-aec1-9b0cd2d2b98c",
+          "playerName": "ff",
+          "value": 4,
+          "weight": 1,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 4,
+      "finalScore": 4,
+      "isManualScore": false,
+      "timestamp": 1789330549573
+    },
+    {
+      "taskId": "1158fa9f-b5b7-45d9-a4a8-8b8d627fbe37",
+      "tableId": "386d1866-093d-45dd-94da-9b1f9c86d51c",
+      "taskUrl": "https://gitlab.srv.team/etg-website/etg-website-frontend/-/commits/develop/?ref_type=HEADS",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "0c696a97-a4b1-4bd3-aec1-9b0cd2d2b98c",
+          "playerName": "ff",
+          "value": 8,
+          "weight": 1,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 8,
+      "finalScore": 8,
+      "isManualScore": false,
+      "timestamp": 1789330558726
+    }
+  ]
+}

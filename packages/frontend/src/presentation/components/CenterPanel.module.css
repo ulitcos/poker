@@ -9,6 +9,16 @@
   overflow-y: auto;
 }
 
+.progressLine {
+  font-size: 0.875rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.progressLine strong {
+  color: #94a3b8;
+}
+
 .taskCard {
   background: #1e293b;
   border: 1px solid #334155;
@@ -200,6 +210,29 @@
   font-size: 2.5rem;
   font-weight: 700;
   color: #34d399;
+}
+
+.formula {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid #334155;
+  width: 100%;
+}
+
+.formulaStep {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-family: monospace;
+}
+
+.formulaArrow {
+  font-size: 0.8rem;
+  color: #475569;
+  font-family: monospace;
 }
 
 .adminActions {

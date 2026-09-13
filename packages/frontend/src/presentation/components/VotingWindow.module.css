@@ -9,6 +9,25 @@
   gap: 20px;
   max-width: 400px;
   width: 100%;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.window.urgent {
+  border-color: #dc2626;
+  background: #1f1315;
+}
+
+.urgentNotice {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #f87171;
+  text-align: center;
+  margin: 0;
+  padding: 8px 12px;
+  background: #2d1215;
+  border: 1px solid #7f1d1d;
+  border-radius: 8px;
+  width: 100%;
 }
 
 .label {

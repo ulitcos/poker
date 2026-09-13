@@ -55,7 +55,8 @@ type TableAction =
   | { type: 'ALGORITHM_CHANGED'; payload: ScoringAlgorithm }
   | { type: 'UPDATE_MY_VOTE'; payload: number }
   | { type: 'MY_VOTE_SUBMITTED' }
-  | { type: 'LEAVE_TABLE' };
+  | { type: 'LEAVE_TABLE' }
+  | { type: 'SESSION_FINISHED' };
 
 const initialState: TableState = {
   table: null,
@@ -118,7 +119,6 @@ function reducer(state: TableState, action: TableAction): TableState {
       return {
         ...state,
         table: state.table ? { ...state.table, activeTaskId: action.payload } : null,
-        revealedVotes: null,
         myVoteValue: 0,
         myVoteSubmitted: false,
       };
@@ -172,15 +172,6 @@ function reducer(state: TableState, action: TableAction): TableState {
         myVoteValue: 0,
         myVoteSubmitted: false,
         players: state.players.map((p) => ({ ...p, votingStatus: null })),
-        table: state.table
-          ? {
-              ...state.table,
-              activeTaskId: state.tasks.find(
-                (t) => t.order > (state.tasks.find((x) => x.id === action.payload.taskId)?.order ?? -1)
-                  && t.status === 'ready'
-              )?.id ?? state.table.activeTaskId,
-            }
-          : null,
       };
     case 'VOTING_RESTARTED':
       return {
@@ -200,6 +191,7 @@ function reducer(state: TableState, action: TableAction): TableState {
     case 'MY_VOTE_SUBMITTED':
       return { ...state, myVoteSubmitted: true };
     case 'LEAVE_TABLE':
+    case 'SESSION_FINISHED':
       return initialState;
     default:
       return state;
@@ -225,6 +217,7 @@ interface TableContextValue extends TableState {
   updatePlayerWeight: (tableId: TableId, playerId: PlayerId, weight: number) => void;
   togglePlayerCanVote: (tableId: TableId, playerId: PlayerId, canVote: boolean) => void;
   setAlgorithm: (tableId: TableId, algorithm: ScoringAlgorithm) => void;
+  finishSession: (tableId: TableId) => void;
 }
 
 const TableContext = createContext<TableContextValue | null>(null);
@@ -252,6 +245,7 @@ export function TableProvider({ children }: { children: React.ReactNode }) {
     socket.on('voting:revealed', (p) => dispatch({ type: 'VOTING_REVEALED', payload: p }));
     socket.on('voting:finalized', (p) => dispatch({ type: 'VOTING_FINALIZED', payload: p }));
     socket.on('voting:restarted', (id) => dispatch({ type: 'VOTING_RESTARTED', payload: id }));
+    socket.on('session:finished', () => dispatch({ type: 'SESSION_FINISHED' }));
 
     return () => {
       socket.off('table:state');
@@ -271,6 +265,7 @@ export function TableProvider({ children }: { children: React.ReactNode }) {
       socket.off('voting:revealed');
       socket.off('voting:finalized');
       socket.off('voting:restarted');
+      socket.off('session:finished');
     };
   }, []);
 
@@ -377,6 +372,10 @@ export function TableProvider({ children }: { children: React.ReactNode }) {
     getSocket().emit('table:set-algorithm', { tableId, algorithm });
   }, []);
 
+  const finishSession = useCallback((tableId: TableId) => {
+    getSocket().emit('session:finish', { tableId });
+  }, []);
+
   return (
     <TableContext.Provider
       value={{
@@ -399,6 +398,7 @@ export function TableProvider({ children }: { children: React.ReactNode }) {
         updatePlayerWeight,
         togglePlayerCanVote,
         setAlgorithm,
+        finishSession,
       }}
     >
       {children}

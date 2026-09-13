@@ -9,12 +9,22 @@ interface Props {
   activeTaskId: TaskId | null;
   isAdmin: boolean;
   canSwitch: boolean;
+  allFinalized?: boolean;
+  onFinishSession?: () => void;
 }
 
-export function TaskList({ tableId, tasks, activeTaskId, isAdmin, canSwitch }: Props) {
+export function TaskList({ tableId, tasks, activeTaskId, isAdmin, canSwitch, allFinalized, onFinishSession }: Props) {
   const { addTask, removeTask, reorderTasks, switchTask } = useTable();
   const [newUrl, setNewUrl] = useState('');
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const handleFinishClick = () => setShowConfirm(true);
+  const handleConfirm = () => {
+    setShowConfirm(false);
+    onFinishSession?.();
+  };
+  const handleCancel = () => setShowConfirm(false);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,7 +93,7 @@ export function TaskList({ tableId, tasks, activeTaskId, isAdmin, canSwitch }: P
               </div>
             </div>
             <div className={styles.itemActions}>
-              {canSwitch && isAdmin && task.id !== activeTaskId && (
+              {task.id !== activeTaskId && (canSwitch && isAdmin || allFinalized) && (
                 <button
                   className={styles.switchBtn}
                   onClick={() => switchTask(tableId, task.id)}
@@ -103,6 +113,26 @@ export function TaskList({ tableId, tasks, activeTaskId, isAdmin, canSwitch }: P
           </li>
         ))}
       </ul>
+
+      {isAdmin && (
+        <div className={styles.finishWrapper}>
+          <button className={styles.finishBtn} onClick={handleFinishClick}>
+            Завершить оценку
+          </button>
+        </div>
+      )}
+
+      {showConfirm && (
+        <div className={styles.overlay}>
+          <div className={styles.dialog}>
+            <p className={styles.dialogText}>Завершить оценку? Все участники будут выброшены из лобби.</p>
+            <div className={styles.dialogActions}>
+              <button className={styles.dialogConfirm} onClick={handleConfirm}>Завершить</button>
+              <button className={styles.dialogCancel} onClick={handleCancel}>Отмена</button>
+            </div>
+          </div>
+        </div>
+      )}
     </aside>
   );
 }

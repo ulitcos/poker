@@ -301,7 +301,33 @@ export class VotingService {
       };
     }
 
-    session.scores.push(scoreResult);
+    const idx = session.scores.findIndex((s) => s.taskId === scoreResult.taskId);
+    if (idx !== -1) {
+      session.scores[idx] = scoreResult;
+    } else {
+      session.scores.push(scoreResult);
+    }
+    await this.sessionResultRepo.save(session);
+  }
+
+  async finishSession(tableId: TableId): Promise<void> {
+    const sessionId = this.sessionService.getSessionId(tableId);
+    let session = await this.sessionResultRepo.findById(sessionId);
+
+    const table = this.requireTable(tableId);
+
+    if (!session) {
+      session = {
+        sessionId,
+        tableName: table.name,
+        tableId,
+        startedAt: Date.now(),
+        finishedAt: null,
+        scores: [],
+      };
+    }
+
+    session.finishedAt = Date.now();
     await this.sessionResultRepo.save(session);
   }
 

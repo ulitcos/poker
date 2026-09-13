@@ -1,0 +1,208 @@
+{
+  "sessionId": "6f3bca4d-343a-4e1a-a0dc-dff561452bc8",
+  "tableName": "1",
+  "tableId": "c6cea007-149d-4994-bb4f-6778e32cb4b1",
+  "startedAt": 1789324202632,
+  "finishedAt": null,
+  "scores": [
+    {
+      "taskId": "933f8ee7-b497-459b-8cdf-e5e61cfeb35e",
+      "tableId": "c6cea007-149d-4994-bb4f-6778e32cb4b1",
+      "taskUrl": "https://youtrack.etg.team/issues/MIFD",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "8b4d641d-aa35-41e5-b0f7-bdcdc6c28d6a",
+          "playerName": "rus",
+          "value": 4,
+          "weight": 1,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 4,
+      "finalScore": 4,
+      "isManualScore": false,
+      "timestamp": 1789324202632
+    },
+    {
+      "taskId": "9bbb6b99-8995-4732-917f-88ece79aa09d",
+      "tableId": "c6cea007-149d-4994-bb4f-6778e32cb4b1",
+      "taskUrl": "https://youtrack.etg.team/issues/MIFD",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "8b4d641d-aa35-41e5-b0f7-bdcdc6c28d6a",
+          "playerName": "rus",
+          "value": 8,
+          "weight": 1,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 8,
+      "finalScore": 8,
+      "isManualScore": false,
+      "timestamp": 1789324209606
+    },
+    {
+      "taskId": "7466b2ae-1857-4f26-8a63-1db6ecdf9214",
+      "tableId": "c6cea007-149d-4994-bb4f-6778e32cb4b1",
+      "taskUrl": "https://youtrack.etg.team/issues/MIFD",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "8b4d641d-aa35-41e5-b0f7-bdcdc6c28d6a",
+          "playerName": "rus",
+          "value": 40,
+          "weight": 1,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 40,
+      "finalScore": 40,
+      "isManualScore": false,
+      "timestamp": 1789324217474
+    },
+    {
+      "taskId": "9bbb6b99-8995-4732-917f-88ece79aa09d",
+      "tableId": "c6cea007-149d-4994-bb4f-6778e32cb4b1",
+      "taskUrl": "https://youtrack.etg.team/issues/MIFD",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "8b4d641d-aa35-41e5-b0f7-bdcdc6c28d6a",
+          "playerName": "rus",
+          "value": 8,
+          "weight": 1,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 8,
+      "finalScore": 8,
+      "isManualScore": false,
+      "timestamp": 1789324254457
+    },
+    {
+      "taskId": "933f8ee7-b497-459b-8cdf-e5e61cfeb35e",
+      "tableId": "c6cea007-149d-4994-bb4f-6778e32cb4b1",
+      "taskUrl": "https://youtrack.etg.team/issues/MIFD",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "8b4d641d-aa35-41e5-b0f7-bdcdc6c28d6a",
+          "playerName": "rus",
+          "value": 8,
+          "weight": 1,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 8,
+      "finalScore": 8,
+      "isManualScore": false,
+      "timestamp": 1789324264833
+    },
+    {
+      "taskId": "933f8ee7-b497-459b-8cdf-e5e61cfeb35e",
+      "tableId": "c6cea007-149d-4994-bb4f-6778e32cb4b1",
+      "taskUrl": "https://youtrack.etg.team/issues/MIFD",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "8b4d641d-aa35-41e5-b0f7-bdcdc6c28d6a",
+          "playerName": "rus",
+          "value": 40,
+          "weight": 1,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 40,
+      "finalScore": 40,
+      "isManualScore": false,
+      "timestamp": 1789325182517
+    },
+    {
+      "taskId": "9bbb6b99-8995-4732-917f-88ece79aa09d",
+      "tableId": "c6cea007-149d-4994-bb4f-6778e32cb4b1",
+      "taskUrl": "https://youtrack.etg.team/issues/MIFD",
+      "algorithm": "trimmed-average",
+      "votes": [
+        {
+          "playerId": "8b4d641d-aa35-41e5-b0f7-bdcdc6c28d6a",
+          "playerName": "rus",
+          "value": 2,
+          "weight": 1,
+          "isDropped": true
+        },
+        {
+          "playerId": "39152239-4f95-4a7f-b4ed-5e057da2e467",
+          "playerName": "sad",
+          "value": 4,
+          "weight": 1,
+          "isDropped": false
+        },
+        {
+          "playerId": "06903b3d-3d52-46b5-a707-816ccc66b2b8",
+          "playerName": "sofa",
+          "value": 8,
+          "weight": 1,
+          "isDropped": true
+        }
+      ],
+      "calculatedScore": 4,
+      "finalScore": 4,
+      "isManualScore": false,
+      "timestamp": 1789325296003
+    },
+    {
+      "taskId": "9bbb6b99-8995-4732-917f-88ece79aa09d",
+      "tableId": "c6cea007-149d-4994-bb4f-6778e32cb4b1",
+      "taskUrl": "https://youtrack.etg.team/issues/MIFD",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "8b4d641d-aa35-41e5-b0f7-bdcdc6c28d6a",
+          "playerName": "rus",
+          "value": 4,
+          "weight": 1,
+          "isDropped": false
+        },
+        {
+          "playerId": "06903b3d-3d52-46b5-a707-816ccc66b2b8",
+          "playerName": "sofa",
+          "value": 10,
+          "weight": 1.5,
+          "isDropped": false
+        },
+        {
+          "playerId": "39152239-4f95-4a7f-b4ed-5e057da2e467",
+          "playerName": "sad",
+          "value": 20,
+          "weight": 0.5,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 9.7,
+      "finalScore": 9.7,
+      "isManualScore": false,
+      "timestamp": 1789325533176
+    },
+    {
+      "taskId": "9bbb6b99-8995-4732-917f-88ece79aa09d",
+      "tableId": "c6cea007-149d-4994-bb4f-6778e32cb4b1",
+      "taskUrl": "https://youtrack.etg.team/issues/MIFD",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "8b4d641d-aa35-41e5-b0f7-bdcdc6c28d6a",
+          "playerName": "rus",
+          "value": 4,
+          "weight": 1,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 4,
+      "finalScore": 4,
+      "isManualScore": false,
+      "timestamp": 1789325609410
+    }
+  ]
+}

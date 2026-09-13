@@ -19,22 +19,22 @@ interface SessionContextValue extends SessionState {
 const SessionContext = createContext<SessionContextValue | null>(null);
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<SessionState>({
+  const [state, setState] = useState<SessionState>(() => ({
     player: null,
     isConnected: false,
-    isConnecting: false,
+    isConnecting: localStorage.getItem(PLAYER_KEY) !== null,
     error: null,
-  });
+  }));
 
   const rehydrated = useRef(false);
 
-  const join = useCallback(async (name: string) => {
+  const join = useCallback(async (name: string, id?: string) => {
     setState((s) => ({ ...s, isConnecting: true, error: null }));
     const socket = getSocket();
 
     return new Promise<void>((resolve, reject) => {
       const doJoin = () => {
-        socket.emit('session:join', { playerName: name }, (response) => {
+        socket.emit('session:join', { playerName: name, playerId: id }, (response) => {
           if (response.success && response.player) {
             localStorage.setItem(PLAYER_KEY, JSON.stringify(response.player));
             setState((s) => ({
@@ -75,7 +75,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const player = JSON.parse(stored) as Player;
-      join(player.name).catch(() => {});
+      join(player.name, player.id).catch(() => {});
     } catch {
       localStorage.removeItem(PLAYER_KEY);
     }

@@ -7,7 +7,7 @@ import type { ScoreResult, SessionResult } from '../domain/ScoreResult';
 // ─── Client → Server ─────────────────────────────────────────────────────────
 
 export interface ClientToServerEvents {
-  'session:join': (payload: { playerName: string }, callback: (response: JoinResponse) => void) => void;
+  'session:join': (payload: { playerName: string; playerId?: string }, callback: (response: JoinResponse) => void) => void;
 
   'table:create': (payload: { name: string }, callback: (response: TableResponse) => void) => void;
   'table:join': (payload: { tableId: TableId }, callback: (response: TableStateResponse) => void) => void;
@@ -32,6 +32,8 @@ export interface ClientToServerEvents {
   'player:toggle-can-vote': (payload: { tableId: TableId; playerId: PlayerId; canVote: boolean }) => void;
 
   'table:set-algorithm': (payload: { tableId: TableId; algorithm: ScoringAlgorithm }) => void;
+
+  'session:finish': (payload: { tableId: TableId }) => void;
 }
 
 // ─── Server → Client ─────────────────────────────────────────────────────────
@@ -57,6 +59,8 @@ export interface ServerToClientEvents {
   'voting:revealed': (payload: { votes: VoteView[]; calculatedScore: number; activeTaskId: TaskId }) => void;
   'voting:finalized': (payload: { taskId: TaskId; score: ScoreResult }) => void;
   'voting:restarted': (taskId: TaskId) => void;
+
+  'session:finished': () => void;
 
   'error': (message: string) => void;
 }

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSession } from '../../application/contexts/SessionContext';
 import { useTable } from '../../application/contexts/TableContext';
+import { getSocket } from '../../infrastructure/SocketClient';
 import { TaskList } from '../components/TaskList';
 import { PlayerList } from '../components/PlayerList';
 import { ScoringAlgorithmPanel } from '../components/ScoringAlgorithmPanel';
@@ -12,12 +13,19 @@ export function TablePage() {
   const { tableId } = useParams<{ tableId: string }>();
   const navigate = useNavigate();
   const { player } = useSession();
-  const { table, players, tasks, isLoading, error, joinTable, leaveTable, restartVoting } = useTable();
+  const { table, players, tasks, isLoading, error, joinTable, leaveTable, finishSession } = useTable();
 
   useEffect(() => {
     if (!tableId) return;
-    joinTable(tableId).catch(() => navigate('/'));
+    joinTable(tableId).catch(() => {});
   }, [tableId]);
+
+  useEffect(() => {
+    const socket = getSocket();
+    const handleFinished = () => navigate('/');
+    socket.on('session:finished', handleFinished);
+    return () => { socket.off('session:finished', handleFinished); };
+  }, [navigate]);
 
   const handleLeave = () => {
     leaveTable();
@@ -64,6 +72,8 @@ export function TablePage() {
           activeTaskId={table.activeTaskId}
           isAdmin={isAdmin}
           canSwitch={canSwitchTasks}
+          allFinalized={allTasksFinalized}
+          onFinishSession={() => finishSession(table.id)}
         />
 
         <main className={styles.main}>
@@ -84,22 +94,6 @@ export function TablePage() {
               isAdmin={isAdmin}
             />
 
-            {isAdmin && allTasksFinalized && (
-              <div className={styles.restartSection}>
-                <p className={styles.hint}>Выберите задачу для перезапуска оценки:</p>
-                <div className={styles.restartList}>
-                  {tasks.map((t) => (
-                    <button
-                      key={t.id}
-                      className={styles.restartBtn}
-                      onClick={() => restartVoting(table.id, t.id)}
-                    >
-                      {t.url.split('/').pop()}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </main>
 
