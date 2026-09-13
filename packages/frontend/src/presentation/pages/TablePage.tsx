@@ -70,6 +70,7 @@ export function TablePage() {
           <CenterPanel
             tableId={table.id}
             activeTask={activeTask}
+            tasks={tasks}
             allTasksFinalized={allTasksFinalized}
             isAdmin={isAdmin}
             currentPlayer={players.find((p) => p.id === player.id)}

@@ -7,25 +7,37 @@ import styles from './CenterPanel.module.css';
 interface Props {
   tableId: TableId;
   activeTask: Task | undefined;
+  tasks: Task[];
   allTasksFinalized: boolean;
   isAdmin: boolean;
   currentPlayer: Player | undefined;
   players: Player[];
 }
 
-export function CenterPanel({ tableId, activeTask, allTasksFinalized, isAdmin, currentPlayer, players }: Props) {
+export function CenterPanel({ tableId, activeTask, tasks, allTasksFinalized, isAdmin, currentPlayer, players }: Props) {
   const {
     startVoting,
     revealVotes,
     setManualScore,
     revertToCalculated,
     finalizeScore,
+    restartVoting,
+    switchTask,
     revealedVotes,
     calculatedScore,
   } = useTable();
 
   const [manualScoreInput, setManualScoreInput] = useState('');
   const [showManualInput, setShowManualInput] = useState(false);
+
+  const nextTask = (() => {
+    if (!activeTask) return undefined;
+    const unfinished = tasks.filter((t) => t.id !== activeTask.id && t.status !== 'finalized');
+    return (
+      unfinished.find((t) => t.order > activeTask.order) ??
+      unfinished.find((t) => t.order < activeTask.order)
+    );
+  })();
 
   const canVote = currentPlayer?.canVote ?? false;
   const isVoting = activeTask?.status === 'voting';
@@ -156,8 +168,24 @@ export function CenterPanel({ tableId, activeTask, allTasksFinalized, isAdmin, c
                 </button>
               )}
 
-              <button className={styles.primaryBtn} onClick={() => finalizeScore(tableId)}>
-                Зафиксировать оценку
+              {nextTask ? (
+                <button
+                  className={styles.primaryBtn}
+                  onClick={() => finalizeScore(tableId)}
+                  title={nextTask.url}
+                >
+                  Перейти к следующей задаче →
+                </button>
+              ) : (
+                <button className={styles.primaryBtn} onClick={() => finalizeScore(tableId)}>
+                  Зафиксировать оценку
+                </button>
+              )}
+              <button
+                className={styles.dangerBtn}
+                onClick={() => restartVoting(tableId, activeTask.id)}
+              >
+                Сбросить оценку
               </button>
             </div>
           )}
@@ -186,6 +214,25 @@ export function CenterPanel({ tableId, activeTask, allTasksFinalized, isAdmin, c
               </>
             )}
           </div>
+          {isAdmin && (
+            <div className={styles.adminActions}>
+              {nextTask && (
+                <button
+                  className={styles.primaryBtn}
+                  onClick={() => switchTask(tableId, nextTask.id)}
+                  title={nextTask.url}
+                >
+                  Перейти к следующей задаче →
+                </button>
+              )}
+              <button
+                className={styles.dangerBtn}
+                onClick={() => restartVoting(tableId, activeTask.id)}
+              >
+                Сбросить оценку
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

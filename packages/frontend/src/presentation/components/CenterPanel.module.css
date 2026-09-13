@@ -86,6 +86,22 @@
   color: #f1f5f9;
 }
 
+.dangerBtn {
+  padding: 10px 24px;
+  background: transparent;
+  color: #f87171;
+  border: 1px solid #7f1d1d;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dangerBtn:hover {
+  background: #1f1315;
+  border-color: #f87171;
+}
+
 .cancelBtn {
   padding: 10px 20px;
   background: transparent;
