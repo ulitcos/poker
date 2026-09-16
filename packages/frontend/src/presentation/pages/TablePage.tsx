@@ -74,6 +74,13 @@ export function TablePage() {
           canSwitch={canSwitchTasks}
           allFinalized={allTasksFinalized}
           onFinishSession={() => finishSession(table.id)}
+          scoringAlgorithmPanel={
+            <ScoringAlgorithmPanel
+              tableId={table.id}
+              current={table.scoringAlgorithm}
+              isAdmin={isAdmin}
+            />
+          }
         />
 
         <main className={styles.main}>
@@ -86,15 +93,6 @@ export function TablePage() {
             currentPlayer={players.find((p) => p.id === player.id)}
             players={players}
           />
-
-          <div className={styles.bottomPanel}>
-            <ScoringAlgorithmPanel
-              tableId={table.id}
-              current={table.scoringAlgorithm}
-              isAdmin={isAdmin}
-            />
-
-          </div>
         </main>
 
         <PlayerList

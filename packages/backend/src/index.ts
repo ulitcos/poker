@@ -79,6 +79,6 @@ const socketHandler = new SocketHandler(
 );
 socketHandler.register();
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`Planning Poker server running on port ${PORT}`);
 });

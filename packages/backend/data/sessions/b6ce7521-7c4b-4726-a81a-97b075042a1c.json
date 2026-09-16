@@ -1,0 +1,36 @@
+{
+  "sessionId": "b6ce7521-7c4b-4726-a81a-97b075042a1c",
+  "tableName": "1",
+  "tableId": "cef81bb5-c7ff-4d74-b565-ef140ae6381d",
+  "adminId": "9d54baa3-27db-40b0-bed7-6fff3b534fb8",
+  "startedAt": 1789545084254,
+  "finishedAt": null,
+  "scores": [
+    {
+      "taskId": "8fd71186-1cf8-4cd7-9bdc-cbd632f337b7",
+      "tableId": "cef81bb5-c7ff-4d74-b565-ef140ae6381d",
+      "taskUrl": "https://youtrack.etg.team/issue/MIFD-1913/Dekonsolidaciya-ostatki-spisok",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "9d54baa3-27db-40b0-bed7-6fff3b534fb8",
+          "playerName": "rus",
+          "value": 4,
+          "weight": 1,
+          "isDropped": false
+        },
+        {
+          "playerId": "7fe314a3-08d6-43ff-87e7-e8bda5484d1c",
+          "playerName": "Антон",
+          "value": 40,
+          "weight": 1,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 22,
+      "finalScore": 22,
+      "isManualScore": false,
+      "timestamp": 1789545084254
+    }
+  ]
+}

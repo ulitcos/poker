@@ -11,9 +11,10 @@ interface Props {
   canSwitch: boolean;
   allFinalized?: boolean;
   onFinishSession?: () => void;
+  scoringAlgorithmPanel?: React.ReactNode;
 }
 
-export function TaskList({ tableId, tasks, activeTaskId, isAdmin, canSwitch, allFinalized, onFinishSession }: Props) {
+export function TaskList({ tableId, tasks, activeTaskId, isAdmin, canSwitch, allFinalized, onFinishSession, scoringAlgorithmPanel }: Props) {
   const { addTask, removeTask, reorderTasks, switchTask } = useTable();
   const [newUrl, setNewUrl] = useState('');
   const [dragIndex, setDragIndex] = useState<number | null>(null);
@@ -113,6 +114,8 @@ export function TaskList({ tableId, tasks, activeTaskId, isAdmin, canSwitch, all
           </li>
         ))}
       </ul>
+
+      {scoringAlgorithmPanel}
 
       {isAdmin && (
         <div className={styles.finishWrapper}>
