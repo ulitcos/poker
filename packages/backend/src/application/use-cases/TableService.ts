@@ -87,7 +87,7 @@ export class TableService {
     const table: Table = {
       id: tableId,
       name: session.tableName,
-      adminId: '',
+      adminId: session.adminId ?? '',
       status: tasks.length > 0 ? 'completed' : 'waiting',
       activeTaskId: tasks[tasks.length - 1]?.id ?? null,
       scoringAlgorithm: algorithm,

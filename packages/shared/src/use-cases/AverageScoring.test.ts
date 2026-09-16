@@ -17,9 +17,9 @@ describe('AverageScoring', () => {
     expect(strategy.calculate([vote('p1', 4), vote('p2', 8)]).result).toBe(6);
   });
 
-  it('divides weightedSum by participant count, not sum of weights', () => {
-    // (4×1.0 + 8×1.2) / 2 = (4 + 9.6) / 2 = 13.6 / 2 = 6.8
-    expect(strategy.calculate([vote('p1', 4, 1.0), vote('p2', 8, 1.2)]).result).toBe(6.8);
+  it('divides weightedSum by sum of weights', () => {
+    // (4×1.0 + 8×1.2) / (1.0 + 1.2) = 13.6 / 2.2 ≈ 6.2
+    expect(strategy.calculate([vote('p1', 4, 1.0), vote('p2', 8, 1.2)]).result).toBe(6.2);
   });
 
   it('rounds to tenths', () => {
@@ -32,8 +32,8 @@ describe('AverageScoring', () => {
     expect(strategy.calculate([vote('p1', 1), vote('p2', 2)]).result).toBe(1.5);
   });
 
-  it('zero weight contributes 0 to weightedSum', () => {
-    // (4×0) / 1 = 0
+  it('zero weight: returns 0 (totalWeight is 0)', () => {
+    // (4×0) / 0 → guarded to 0
     expect(strategy.calculate([vote('p1', 4, 0)]).result).toBe(0);
   });
 
@@ -42,8 +42,8 @@ describe('AverageScoring', () => {
     expect(output.votesWithMeta.every((v) => !v.isDropped)).toBe(true);
   });
 
-  it('single vote returns that value times weight divided by 1', () => {
-    // (5×2.0) / 1 = 10
-    expect(strategy.calculate([vote('p1', 5, 2.0)]).result).toBe(10);
+  it('single vote: returns the value unchanged (weight cancels out)', () => {
+    // (5×2.0) / 2.0 = 5
+    expect(strategy.calculate([vote('p1', 5, 2.0)]).result).toBe(5);
   });
 });

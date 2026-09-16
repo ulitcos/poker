@@ -291,10 +291,12 @@ export class VotingService {
     let session = await this.sessionResultRepo.findById(sessionId);
 
     if (!session) {
+      const table = this.requireTable(tableId);
       session = {
         sessionId,
         tableName,
         tableId,
+        adminId: table.adminId,
         startedAt: scoreResult.timestamp,
         finishedAt: null,
         scores: [],
@@ -321,6 +323,7 @@ export class VotingService {
         sessionId,
         tableName: table.name,
         tableId,
+        adminId: table.adminId,
         startedAt: Date.now(),
         finishedAt: null,
         scores: [],

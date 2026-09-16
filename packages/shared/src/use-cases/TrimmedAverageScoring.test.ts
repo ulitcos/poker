@@ -18,9 +18,9 @@ describe('TrimmedAverageScoring', () => {
     expect(strategy.calculate([vote('p1', 2), vote('p2', 8)]).result).toBe(5);
   });
 
-  it('with 2 votes and weights: divides by count not sum of weights', () => {
-    // (4×1.0 + 8×1.2) / 2 = 13.6 / 2 = 6.8
-    expect(strategy.calculate([vote('p1', 4, 1.0), vote('p2', 8, 1.2)]).result).toBe(6.8);
+  it('with 2 votes and weights: divides by sum of weights', () => {
+    // (4×1.0 + 8×1.2) / (1.0 + 1.2) = 13.6 / 2.2 ≈ 6.2
+    expect(strategy.calculate([vote('p1', 4, 1.0), vote('p2', 8, 1.2)]).result).toBe(6.2);
   });
 
   it('with 3+ votes: drops min and max', () => {
@@ -37,8 +37,8 @@ describe('TrimmedAverageScoring', () => {
   });
 
   it('applies weight to remaining votes after dropping', () => {
-    // drop p1(1) and p3(9), remaining: p2 value=4 weight=2 → (4×2) / 1 = 8
-    expect(strategy.calculate([vote('p1', 1), vote('p2', 4, 2), vote('p3', 9)]).result).toBe(8);
+    // drop p1(1) and p3(9), remaining: p2 value=4 weight=2 → (4×2) / 2 = 4
+    expect(strategy.calculate([vote('p1', 1), vote('p2', 4, 2), vote('p3', 9)]).result).toBe(4);
   });
 
   it('with 4 votes: drops one min and one max', () => {

@@ -15,7 +15,7 @@ export class PlayerService {
     }
 
     const player: Player = {
-      id: uuidv4(),
+      id: existingId ?? uuidv4(),
       name,
       status: 'online',
       canVote: true,

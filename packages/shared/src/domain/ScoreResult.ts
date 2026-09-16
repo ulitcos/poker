@@ -27,6 +27,7 @@ export interface SessionResult {
   readonly sessionId: string;
   readonly tableName: string;
   readonly tableId: TableId;
+  readonly adminId: PlayerId;
   readonly startedAt: number;
   finishedAt: number | null;
   scores: ScoreResult[];

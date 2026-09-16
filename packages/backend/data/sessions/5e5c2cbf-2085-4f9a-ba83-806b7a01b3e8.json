@@ -1,0 +1,29 @@
+{
+  "sessionId": "5e5c2cbf-2085-4f9a-ba83-806b7a01b3e8",
+  "tableName": "1",
+  "tableId": "dc17acaa-2c87-4995-bbef-be723517cfb4",
+  "adminId": "7226d268-aba9-44db-a832-b6095050fb27",
+  "startedAt": 1789543564587,
+  "finishedAt": null,
+  "scores": [
+    {
+      "taskId": "57c66d7c-ec22-4a66-8795-0d032935d159",
+      "tableId": "dc17acaa-2c87-4995-bbef-be723517cfb4",
+      "taskUrl": "https://ostrovok.ru/",
+      "algorithm": "average",
+      "votes": [
+        {
+          "playerId": "7226d268-aba9-44db-a832-b6095050fb27",
+          "playerName": "ch",
+          "value": 40,
+          "weight": 1,
+          "isDropped": false
+        }
+      ],
+      "calculatedScore": 40,
+      "finalScore": 40,
+      "isManualScore": false,
+      "timestamp": 1789543612523
+    }
+  ]
+}
