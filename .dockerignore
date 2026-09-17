@@ -1,0 +1,6 @@
+.git
+.gitlab-ci.yml
+.helm-ovh
+.idea
+node_modules
+README.md

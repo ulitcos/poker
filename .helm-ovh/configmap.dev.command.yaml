@@ -1,0 +1,7 @@
+containers:
+  app:
+    command: []
+    livenessProbe:
+      enabled: false
+    readinessProbe:
+      enabled: false

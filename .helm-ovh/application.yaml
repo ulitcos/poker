@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: poker-service
+  namespace: argo-cd
+spec:
+  destination:
+    namespace: poker-service
+    server: https://kubernetes.default.svc
+  project: marketing
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true
+  sources:
+    - repoURL: https://gitlab.srv.team/r.krohin/poker.git
+      targetRevision: HEAD
+      ref: values
+    - repoURL: https://gitlab.srv.team/k8s/chart.git
+      path: .
+      targetRevision: 1.0.3
+      helm:
+        valueFiles: []
+        valuesObject: {}
+        parameters:
+          # the number of hosts here must be equal to the number of hosts in values.yaml (values.ingress)
+          - name: "ingress.hosts[0].host" # http hosts
+            value: ""

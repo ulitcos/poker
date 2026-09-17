@@ -1,0 +1,81 @@
+stages:
+  - build
+  - lint
+  - push
+  - deploy
+  - deploy_k8s
+  - deploy_k8s_prod
+
+include:
+  project: "lib/gitlab-ci"
+  ref: master
+  file:
+    - "templates/gitlab-ci/docker/variables.yml"
+    - "templates/gitlab-ci/docker/image_push.yml"
+    - "templates/gitlab-ci/k8s/deploy.yml"
+
+variables:
+  SEPARATE_CONTAINERS: "true" # must be specified
+  CI_APPLICATIONS: "web" # list the names of the containers
+
+docker_build:
+  stage: build
+  tags:
+    - runner-type:shell
+  script:
+    - docker pull ${build_tag_latest} || true
+    - docker buildx build --builder default --force-rm=true --rm=true --pull=true
+      --cache-to type=inline
+      --cache-from type=registry,ref=${build_tag_latest}
+      --build-arg GIT_BRANCH=${CI_COMMIT_REF_SLUG}
+      --build-arg GIT_COMMIT=${CI_COMMIT_SHA}
+      --build-arg VERSION=${version}
+      --build-arg PIPELINE_ID=${CI_PIPELINE_ID}
+      --build-arg SOURCE=${CI_PROJECT_URL}
+      -t ${build_tag} .
+    - docker tag ${build_tag} ${build_tag_latest}
+    - for i in ${build_tag} ${build_tag_latest};do docker push ${i};done
+
+k8s-deploy-ovh:dev:
+  stage: deploy
+  extends: .k8s-deploy:template
+  when: manual
+  variables:
+    CIRCUIT_LABEL: dev # variable specifying the dev environment
+    HELM_DIR: ".helm-ovh"
+  except:
+    - master
+
+k8s-deploy-ovh:dev-master:
+  stage: deploy
+  extends: .k8s-deploy:template
+  variables:
+    CIRCUIT_LABEL: dev # variable specifying the dev environment
+    HELM_DIR: ".helm-ovh"
+    ADDITIONAL_HOST_NAMES: poker-service.dev.srv.team # additional hosts for http ingress
+  only:
+    - master
+
+k8s-deploy-ovh:dev-branch-as-master:
+  stage: deploy
+  extends: .k8s-deploy:template
+  when: manual
+  variables:
+    CIRCUIT_LABEL: dev
+    HELM_DIR: ".helm-ovh"
+    ADDITIONAL_HOST_NAMES: poker-service.dev.srv.team # additional hosts for http ingress, same as in "DEPLOY_AS_BRANCH" stage
+    DEPLOY_AS_BRANCH: master # branch "master" name, the current branch will be deployed in its place
+  except:
+    - master
+
+k8s-deploy-ovh:main:prod:
+  stage: deploy_k8s_prod
+  extends: .k8s-deploy:template
+  needs:
+    - job: k8s-deploy-ovh:dev-master
+  variables:
+    CIRCUIT_LABEL: prod
+    HELM_DIR: ".helm-ovh"
+    ADDITIONAL_HOST_NAMES: poker-service.srv.team
+  only:
+    - master

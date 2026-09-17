@@ -19,7 +19,7 @@ import { TaskService } from './application/use-cases/TaskService';
 import { VotingService } from './application/use-cases/VotingService';
 import { SocketHandler } from './application/handlers/SocketHandler';
 
-const PORT = process.env.PORT ?? 4000;
+const PORT = Number(process.env.PORT) || 4000;
 const DATA_DIR = path.join(process.cwd(), 'data', 'sessions');
 
 const app = express();
@@ -52,6 +52,14 @@ const votingService = new VotingService(
   sessionResultRepo,
   sessionService,
 );
+
+// ─── Static frontend ──────────────────────────────────────────────────────────
+const FRONTEND_DIST = path.resolve(process.cwd(), 'public');
+app.use(express.static(FRONTEND_DIST));
+app.get('*', (_req, res, next) => {
+  const index = path.join(FRONTEND_DIST, 'index.html');
+  res.sendFile(index, (err) => { if (err) next(); });
+});
 
 // ─── REST: Results ────────────────────────────────────────────────────────────
 app.get('/api/results', async (_req, res) => {

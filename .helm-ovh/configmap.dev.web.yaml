@@ -1,0 +1,62 @@
+# to change the number of replicas
+replicaCount: 1
+
+# command for containers
+containers:
+  app:
+    # Command removed - using default CMD from Dockerfile(nginx)
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 10
+      httpGet:
+        path: /__heartbeat__
+        port: http
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 10
+      httpGet:
+        path: /__heartbeat__
+        port: http
+
+# if you need to enable or disable  http ingress for this container
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+  hosts:
+    - host: poker-service.example1.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+          port: http
+    - host: poker-service.example2.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+          port: http
+  tls: []
+
+# if you need to enable or disable grpc ingress for this container
+ingressGrpc:
+  enabled: false
+
+# if you need to enable or disable metrics from this container
+serviceMonitor:
+  enabled: false
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      number: 80
+      containerName: app
+
+resourcesPreset: "nano"
+
+resources: {}
+#   limits:
+#     cpu: 256m
+#     memory: 256Mi
+#   requests:
+#     cpu: 100m
+#     memory: 128Mi

@@ -1,0 +1,11 @@
+configmap:
+  # ENV_VARIABLE: "VALUES"
+  # ENV_SECRET_VARIABLE: "vault:dev/data/apps/poker-service#ENV_SECRET_VARIABLE"
+  # POSTGRES_PASSWORD: "vault:dev/data/apps/service-name#postgres_password"
+  # POSTGRES_USER: "vault:dev/data/apps/service-name#postgres_user"
+  # POSTGRES_DB: "vault:dev/data/apps/service-name#postgres_db"
+
+podAnnotations:
+  vault.security.banzaicloud.io/vault-addr: "https://devops-vault.dev.srv.team"
+  vault.security.banzaicloud.io/vault-role: "dev"
+  vault.security.banzaicloud.io/vault-path: "kubernetes-dev"
